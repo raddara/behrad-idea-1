@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GYM bookers - رزرو باشگاه آنلاین</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .sport-card, .gym-card {
+            background: linear-gradient(145deg, #2a2a3e, #1e1e2e);
+            border: 1px solid #333;
+        }
+        
+        .admin-tab {
+            background: transparent;
+            color: #9ca3af;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+        
+        .admin-tab:hover {
+            color: #60a5fa;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .animate-slideInLeft {
+            animation: slideInLeft 0.8s ease-out;
+        }
+        
+        .animate-slideInRight {
+            animation: slideInRight 0.8s ease-out;
+        }
+        
+        .animate-bounceIn {
+            animation: bounceIn 0.8s ease-out;
+        }
+        
+        .animate-pulse-custom {
+            animation: pulse 2s infinite;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .sport-card, .gym-card {
+                padding: 1rem;
+            }
+            
+            .text-6xl {
+                font-size: 3rem;
+            }
+            
+            .text-4xl {
+                font-size: 2rem;
+            }
+            
+            .text-3xl {
+                font-size: 1.5rem;
+            }
+            
+            .text-2xl {
+                font-size: 1.25rem;
+            }
+            
+            .search-container {
+                max-width: 100%;
+                padding: 0 1rem;
+            }
+            
+            .filter-section {
+                padding: 1rem;
+            }
+            
+            .grid {
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-4 {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+            
+            .grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+            
+            .grid-cols-1.md\\:grid-cols-4 {
+                grid-template-columns: repeat(1, minmax(0, 1fr));
+            }
+            
+            .text-4xl {
+                font-size: 1.75rem;
+            }
+            
+            .py-8 {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+            
+            .px-4 {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
+        
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 50;
+            display: none;
+        }
+        
+        .search-result-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #374151;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .search-result-item:hover {
+            background-color: #374151;
+        }
+        
+        .filter-section {
+            background: linear-gradient(145deg, #2a2a3e, #1e1e2e);
+            border: 1px solid #444;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg py-4 md:py-6 px-4 shadow-2xl">
+        <div class="container mx-auto">
+            <div class="flex items-center justify-between">
+                <nav class="hidden md:flex space-x-reverse space-x-6">
+                    <a href="#" class="text-gray-300 hover:text-white transition-colors">خانه</a>
+                    <a href="#" class="text-gray-300 hover:text-white transition-colors">درباره ما</a>
+                    <a href="#" class="text-gray-300 hover:text-white transition-colors">تماس</a>
+                    <button onclick="showAdminLogin()" class="text-gray-300 hover:text-white transition-colors bg-transparent border border-gray-600 px-3 py-1 rounded">ورود مدیر</button>
+                </nav>
+                <h1 class="text-2xl md:text-3xl font-bold text-white animate-pulse-custom"> GYM bookers</h1>
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-white" onclick="toggleMobileMenu()">
+                    <div class="w-6 h-6 flex flex-col justify-center items-center">
+                        <span class="block w-5 h-0.5 bg-white mb-1"></span>
+                        <span class="block w-5 h-0.5 bg-white mb-1"></span>
+                        <span class="block w-5 h-0.5 bg-white"></span>
+                    </div>
+                </button>
+            </div>
+            <!-- Mobile Menu -->
+            <nav id="mobile-menu" class="hidden md:hidden mt-4 space-y-2">
+                <a href="#" class="block text-gray-300 hover:text-white transition-colors py-2">خانه</a>
+                <a href="#" class="block text-gray-300 hover:text-white transition-colors py-2">درباره ما</a>
+                <a href="#" class="block text-gray-300 hover:text-white transition-colors py-2">تماس</a>
+                <button onclick="showAdminLogin()" class="block text-gray-300 hover:text-white transition-colors bg-transparent border border-gray-600 px-3 py-2 rounded w-full text-right">ورود مدیر</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <div id="welcome-section" class="text-center mb-12">
+            <div class="animate-bounceIn">
+                <div class="text-6xl mb-4 animate-float"></div>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent animate-slideInLeft">
+                به بهترین پلتفرم رزرو باشگاه خوش آمدید
+            </h2>
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 animate-slideInRight">باشگاه مورد نظر خود را جستجو کنید</p>
+            
+            <!-- Search Bar -->
+            <div class="search-container mb-8 animate-fadeInUp" style="animation-delay: 0.5s">
+                <div class="relative">
+                    <input type="text" id="main-search" placeholder="جستجو باشگاه، ورزش یا منطقه..." 
+                           class="w-full bg-gray-800 border-2 border-gray-600 rounded-full px-6 py-4 text-lg md:text-xl text-white placeholder-gray-400 focus:border-blue-500 focus:outline-none transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20">
+                    <button class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors text-xl">
+                        
+                    </button>
+                </div>
+                <div id="search-results" class="search-results"></div>
+            </div>
+        </div>
+
+        <!-- Sports Selection -->
+        <div id="sports-section" class="mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+                <div class="sport-card rounded-xl p-4 md:p-6 card-hover cursor-pointer animate-bounceIn" style="animation-delay: 0.1s" onclick="selectSport('bodybuilding')">
+                    <div class="text-center">
+                        <div class="text-4xl md:text-6xl mb-3 md:mb-4 animate-float"></div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">بدنسازی</h3>
+                        <p class="text-gray-400 text-sm md:text-base">تقویت عضلات و آمادگی جسمانی</p>
+                    </div>
+                </div>
+                
+                <div class="sport-card rounded-xl p-4 md:p-6 card-hover cursor-pointer animate-bounceIn" style="animation-delay: 0.2s" onclick="selectSport('football')">
+                    <div class="text-center">
+                        <div class="text-4xl md:text-6xl mb-3 md:mb-4 animate-float" style="animation-delay: 0.5s"></div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">فوتبال</h3>
+                        <p class="text-gray-400 text-sm md:text-base">محبوب‌ترین ورزش ایران</p>
+                    </div>
+                </div>
+                
+                <div class="sport-card rounded-xl p-4 md:p-6 card-hover cursor-pointer animate-bounceIn" style="animation-delay: 0.3s" onclick="selectSport('swimming')">
+                    <div class="text-center">
+                        <div class="text-4xl md:text-6xl mb-3 md:mb-4 animate-float" style="animation-delay: 1s"></div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">شنا</h3>
+                        <p class="text-gray-400 text-sm md:text-base">ورزش کامل بدن</p>
+                    </div>
+                </div>
+                
+                <div class="sport-card rounded-xl p-4 md:p-6 card-hover cursor-pointer animate-bounceIn" style="animation-delay: 0.4s" onclick="selectSport('volleyball')">
+                    <div class="text-center">
+                        <div class="text-4xl md:text-6xl mb-3 md:mb-4 animate-float" style="animation-delay: 1.5s"></div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">والیبال</h3>
+                        <p class="text-gray-400 text-sm md:text-base">ورزش تیمی و هیجان‌انگیز</p>
+                    </div>
+                </div>
+                
+                <div class="sport-card rounded-xl p-4 md:p-6 card-hover cursor-pointer animate-bounceIn" style="animation-delay: 0.5s" onclick="selectSport('basketball')">
+                    <div class="text-center">
+                        <div class="text-4xl md:text-6xl mb-3 md:mb-4 animate-float" style="animation-delay: 2s"></div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">بسکتبال</h3>
+                        <p class="text-gray-400 text-sm md:text-base">ورزش سرعت و دقت</p>
+                    </div>
+                </div>
+                
+                <div class="sport-card rounded-xl p-4 md:p-6 card-hover cursor-pointer animate-bounceIn" style="animation-delay: 0.6s" onclick="selectSport('tennis')">
+                    <div class="text-center">
+                        <div class="text-4xl md:text-6xl mb-3 md:mb-4 animate-float" style="animation-delay: 2.5s"></div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-green-400 to-teal-500 bg-clip-text text-transparent">تنیس</h3>
+                        <p class="text-gray-400 text-sm md:text-base">ورزش تکنیکی و هیجان‌انگیز</p>
+                    </div>
+                </div>
+                
+                <div class="sport-card rounded-xl p-4 md:p-6 card-hover cursor-pointer animate-bounceIn" style="animation-delay: 0.7s" onclick="selectSport('wrestling')">
+                    <div class="text-center">
+                        <div class="text-4xl md:text-6xl mb-3 md:mb-4 animate-float" style="animation-delay: 3s"></div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">کشتی</h3>
+                        <p class="text-gray-400 text-sm md:text-base">ورزش باستانی ایران</p>
+                    </div>
+                </div>
+                
+                <div class="sport-card rounded-xl p-4 md:p-6 card-hover cursor-pointer animate-bounceIn" style="animation-delay: 0.8s" onclick="selectSport('kickboxing')">
+                    <div class="text-center">
+                        <div class="text-4xl md:text-6xl mb-3 md:mb-4 animate-float" style="animation-delay: 3.5s"></div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-2 bg-gradient-to-r from-red-400 to-yellow-500 bg-clip-text text-transparent">کیک بوکس</h3>
+                        <p class="text-gray-400 text-sm md:text-base">دفاع شخصی و آمادگی کاردیو</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gyms List -->
+        <div id="gyms-section" class="hidden">
+            <div class="flex items-center justify-between mb-8">
+                <button onclick="goBack()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg transition-colors">
+                    ← بازگشت
+                </button>
+                <h3 class="text-3xl font-bold" id="sport-title">باشگاه‌های بدنسازی</h3>
+            </div>
+            
+            <!-- Filters -->
+            <div class="filter-section">
+                <h4 class="text-xl font-bold mb-4 text-blue-400"> فیلترها</h4>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">قیمت:</label>
+                        <select id="price-filter" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white">
+                            <option value="">همه قیمت‌ها</option>
+                            <option value="low">کمتر از 150 هزار</option>
+                            <option value="medium">150-200 هزار</option>
+                            <option value="high">بیشتر از 200 هزار</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">منطقه:</label>
+                        <select id="area-filter" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white">
+                            <option value="">همه مناطق</option>
+                            <option value="ولیعصر">ولیعصر</option>
+                            <option value="آزادی">آزادی</option>
+                            <option value="انقلاب">انقلاب</option>
+                            <option value="شریعتی">شریعتی</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">امتیاز:</label>
+                        <select id="rating-filter" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white">
+                            <option value="">همه امتیازها</option>
+                            <option value="4.5">4.5+ ستاره</option>
+                            <option value="4.0">4.0+ ستاره</option>
+                            <option value="3.5">3.5+ ستاره</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">امکانات:</label>
+                        <select id="facility-filter" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-white">
+                            <option value="">همه امکانات</option>
+                            <option value="سونا">سونا</option>
+                            <option value="جکوزی">جکوزی</option>
+                            <option value="پارکینگ">پارکینگ</option>
+                            <option value="مربی">مربی شخصی</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="applyFilters()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors">
+                    اعمال فیلتر
+                </button>
+                <button onclick="clearFilters()" class="mt-4 mr-2 bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+                    پاک کردن فیلترها
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="gyms-container">
+                <!-- Gyms will be populated here -->
+            </div>
+        </div>
+
+        <!-- Gym Details -->
+        <div id="gym-details" class="hidden">
+            <div class="flex justify-end mb-6 animate-slideInRight">
+                <button onclick="goBackToGyms()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg transition-colors">
+                    ← بازگشت به لیست
+                </button>
+            </div>
+            
+            <div class="gym-card rounded-xl p-6 md:p-8 animate-fadeInUp">
+                <!-- Header Section -->
+                <div class="border-b border-gray-600 pb-6 mb-8">
+                    <div class="text-center mb-6 animate-bounceIn">
+                        <div class="text-6xl md:text-8xl mb-4 animate-float"></div>
+                    </div>
+                    <div class="flex flex-col md:flex-row items-center justify-between mb-4 animate-slideInLeft">
+                        <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent text-center md:text-right mb-4 md:mb-0" id="gym-name">نام باشگاه</h2>
+                        <div class="flex items-center space-x-reverse space-x-2 animate-pulse-custom">
+                            <span class="text-yellow-400 text-2xl md:text-3xl"></span>
+                            <span class="text-xl md:text-2xl font-bold" id="gym-rating">4.8</span>
